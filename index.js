@@ -28,6 +28,6 @@ app
   .get("/getTask/:id", taskController.getTaskById)
   .put("/updateTask/:id", taskController.updatetaskById)
   .delete("/deleteTask/:id", taskController.deletetaskById)
-app.listen(process.env.PORT, () => {
-  console.log(`server Started at ${process.env.PORT}`);
+app.listen( () => {
+  console.log(`server Started`);
 });
