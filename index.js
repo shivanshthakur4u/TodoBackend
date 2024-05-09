@@ -3,12 +3,15 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const taskRouter = express.Router();
+const userRouter = express.Router();
 const taskController = require("./controller/task");
-var cors = require('cors')
+const authRoutes = require("./routes/auth");
+var cors = require("cors");
 // middlewares
 app.use(express.json()); // body-parser
-app.use("/", taskRouter); // router
-app.use(cors())
+app.use("/", taskRouter); // tasks routes
+app.use("/user", userRouter); // user routes
+app.use(cors());
 
 // DB Connection
 
@@ -27,7 +30,11 @@ app
   .get("/getTasks", taskController.getAllTasks)
   .get("/getTask/:id", taskController.getTaskById)
   .put("/updateTask/:id", taskController.updatetaskById)
-  .delete("/deleteTask/:id", taskController.deletetaskById)
-app.listen( () => {
+  .delete("/deleteTask/:id", taskController.deletetaskById);
+
+  app.post("/register", authRoutes.createUser);
+
+app.listen(() => {
   console.log(`server Started`);
 });
+
