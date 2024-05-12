@@ -44,7 +44,7 @@ exports.signin = async (req, res) => {
     }
     const isValid = bcrypt.compareSync(password, user.password);
     if (isValid) {
-      const token = jwt.sign({ email: email }, privateKey, {
+      const token = jwt.sign({ email: email }, process.env.PrivateKey , {
         expiresIn: "48h",
       });
       user.token = token;
