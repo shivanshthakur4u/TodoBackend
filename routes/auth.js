@@ -8,7 +8,7 @@ const saltRound = 10;
 const privateKey = process.env.Private_Key;
 
 
-console.log("key:", privateKey)
+// console.log("key:", privateKey)
 exports.createUser = async (req, res) => {
   try {
     const { email, userName, password, name } = req.body;
