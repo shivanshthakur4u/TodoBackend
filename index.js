@@ -35,7 +35,7 @@ app
   app.post("/user/register", authRoutes.createUser)
      .post("/user/signin", authRoutes.signin)
 
-app.listen( () => {
+app.listen(process.env.PORT, () => {
   console.log(`server Started`);
 });
 
