@@ -21,7 +21,7 @@ async function main() {
   await mongoose.connect(
     `mongodb+srv://boylikes2play:${process.env.DB_PASSWORD}@todoapp.l9hs3ur.mongodb.net/?retryWrites=true&w=majority&appName=TodoApp`
   );
-  console.log("DB Connected");
+  // console.log("DB Connected");
 }
 
 // Endpoints
