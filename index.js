@@ -32,9 +32,10 @@ app
   .put("/updateTask/:id", taskController.updatetaskById)
   .delete("/deleteTask/:id", taskController.deletetaskById);
 
-  app.post("/register", authRoutes.createUser);
+  app.post("/user/register", authRoutes.createUser)
+     .post("/user/signin", authRoutes.signin)
 
-app.listen(() => {
+app.listen( () => {
   console.log(`server Started`);
 });
 
