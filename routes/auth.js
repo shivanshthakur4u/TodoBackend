@@ -29,7 +29,7 @@ exports.createUser = async (req, res) => {
       userName,
       password: hashdPassword,
       name,
-      // token,
+      token,
     });
     await user.save();
     res
