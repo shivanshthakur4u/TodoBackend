@@ -1,9 +1,9 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const fs = require("fs");
+// const fs = require("fs");
 const saltRound = 10;
-var privateKey = fs.readFileSync("./private.key");
+// var privateKey = fs.readFileSync("./private.key");
 
 exports.createUser = async (req, res) => {
   try {
@@ -17,7 +17,7 @@ exports.createUser = async (req, res) => {
       });
     }
     const hashdPassword = bcrypt.hashSync(password, saltRound);
-    const token = jwt.sign({ email: email }, privateKey, { expiresIn: "48h" });
+    const token = jwt.sign({ email: email }, process.env.PrivateKey, { expiresIn: "48h" });
     const user = new User({
       email,
       userName,
