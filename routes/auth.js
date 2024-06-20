@@ -2,16 +2,13 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-// const fs = require("fs");
+
 const saltRound = 10;
-// var privateKey = fs.readFileSync("./private.key");
 const privateKey = process.env.Private_Key;
 
-
-console.log("key:", privateKey)
 exports.createUser = async (req, res) => {
   try {
-    const { email, userName, password, name } = req.body;
+    const { email, password, name } = req.body;
 
     const userExist = await User.findOne({ email: email });
     if (userExist) {
@@ -20,21 +17,25 @@ exports.createUser = async (req, res) => {
         message: "User already registered with this email",
       });
     }
+    
     const hashdPassword = bcrypt.hashSync(password, saltRound);
-    const token = jwt.sign({ email: email }, privateKey, {
-      expiresIn: "48h",
-    });
     const user = new User({
       email,
-      userName,
       password: hashdPassword,
       name,
-      token,
     });
+
+    const token = jwt.sign({ id: user._id }, privateKey, {
+      expiresIn: "48h",
+    });
+    user.token = token;
     await user.save();
-    res
-      .status(200)
-      .json({ success: true, message: "User Created Successfully", user });
+
+    res.status(200).json({
+      success: true,
+      message: "User Created Successfully",
+      userData: { token, name },
+    });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: false, error: error.message });
@@ -50,14 +51,16 @@ exports.signin = async (req, res) => {
     }
     const isValid = bcrypt.compareSync(password, user.password);
     if (isValid) {
-      const token = jwt.sign({ email: email }, privateKey, {
+      const token = jwt.sign({ id: user._id }, privateKey, {
         expiresIn: "48h",
       });
       user.token = token;
       await user.save();
-      res
-        .status(200)
-        .json({ success: true, message: "Signin Successfully", token: token });
+      res.status(200).json({
+        success: true,
+        message: "Signin Successfully",
+        userData: { token, name: user.name },
+      });
     } else {
       res.status(401).json({ message: "Invalid User" });
     }

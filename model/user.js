@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
       },
       message: (props) => `${props.value} is not a valid email`,
     },
+    unique: true,
   },
   token: String,
   list: [

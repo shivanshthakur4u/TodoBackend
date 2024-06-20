@@ -6,36 +6,35 @@ const taskRouter = express.Router();
 const userRouter = express.Router();
 const taskController = require("./controller/task");
 const authRoutes = require("./routes/auth");
+const authMiddleware = require("./middleware/authMiddleware");
 var cors = require("cors");
-// middlewares
-app.use(express.json()); // body-parser
-app.use("/", taskRouter); // tasks routes
-app.use("/user", userRouter); // user routes
+
+// Middlewares
+app.use(express.json());
 app.use(cors());
 
 // DB Connection
-
 main().catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(
     `mongodb+srv://boylikes2play:${process.env.DB_PASSWORD}@todoapp.l9hs3ur.mongodb.net/?retryWrites=true&w=majority&appName=TodoApp`
   );
-  // console.log("DB Connected");
 }
 
 // Endpoints
-app
-  .post("/addTask", taskController.createTask)
-  .get("/getTasks", taskController.getAllTasks)
-  .get("/getTask/:id", taskController.getTaskById)
-  .put("/updateTask/:id", taskController.updatetaskById)
-  .delete("/deleteTask/:id", taskController.deletetaskById);
+app.post("/user/register", authRoutes.createUser);
+app.post("/user/signin", authRoutes.signin);
 
-  app.post("/user/register", authRoutes.createUser)
-     .post("/user/signin", authRoutes.signin)
+taskRouter.use(authMiddleware);
+taskRouter.post("/addTask", taskController.createTask);
+taskRouter.get("/getTasks", taskController.getAllTasks);
+taskRouter.get("/getTask/:id", taskController.getTaskById);
+taskRouter.put("/updateTask/:id", taskController.updatetaskById);
+taskRouter.delete("/deleteTask/:id", taskController.deletetaskById);
 
-app.listen( () => {
-  console.log(`server Started`);
+app.use("/tasks", taskRouter);
+
+app.listen(4000, () => {
+  console.log(`Server started`);
 });
-
