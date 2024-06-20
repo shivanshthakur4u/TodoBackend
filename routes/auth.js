@@ -6,6 +6,8 @@ require("dotenv").config();
 const saltRound = 10;
 const privateKey = process.env.Private_Key;
 
+
+// console.log("key:", privateKey)
 exports.createUser = async (req, res) => {
   try {
     const { email, password, name } = req.body;
